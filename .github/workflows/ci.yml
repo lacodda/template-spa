@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  # The checks lyrn itself runs before it uses a template from outside.
+  check:
+    name: lyrn template check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Install lyrn
+        run: npm install --global lyrn@2.9.0
+      - name: Check the template
+        run: lyrn template check .
+
+  # A template that does not build is not a template: every combination of
+  # its add-ons is generated, and the gate the project ships with is run.
+  generate:
+    name: generate (${{ matrix.addons || 'none' }})
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        addons: ['', 'router', 'tanstack-query', 'router,tanstack-query', 'auth', 'router,auth', 'tanstack-query,auth', 'router,tanstack-query,auth', 'pwa', 'router,pwa', 'tanstack-query,pwa', 'router,tanstack-query,pwa', 'auth,pwa', 'router,auth,pwa', 'tanstack-query,auth,pwa', 'router,tanstack-query,auth,pwa']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Install lyrn
+        run: npm install --global lyrn@2.9.0
+      - name: Generate a project
+        shell: bash
+        run: |
+          args=(new demo-app --template "$GITHUB_WORKSPACE" --yes --no-hooks --repo owner/demo-app --path "$RUNNER_TEMP/demo-app")
+          if [ -n "${{ matrix.addons }}" ]; then args+=(--with "${{ matrix.addons }}"); fi
+          lyrn "${args[@]}"
+      - name: pnpm install --no-frozen-lockfile
+        working-directory: ${{ runner.temp }}/demo-app
+        run: pnpm install --no-frozen-lockfile
+      - name: pnpm lint
+        working-directory: ${{ runner.temp }}/demo-app
+        run: pnpm lint
+      - name: pnpm build
+        working-directory: ${{ runner.temp }}/demo-app
+        run: pnpm build

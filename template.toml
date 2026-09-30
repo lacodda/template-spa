@@ -1,0 +1,72 @@
+# The spa form of lyrn 2.9.0, written out by `lyrn template export spa`.
+# The project's files are under template/; the variables they may ask for
+# are listed at https://lyrn.lacodda.com/reference/template/.
+form = "spa"
+lyrn = "2.9.0"
+
+name = "spa"
+description = "Single-page app: Vite, React, TypeScript, Tailwind, dowel"
+standard = "2026.09"
+
+# Files whose own syntax collides with the placeholder braces. `cliff.toml` is
+# a Tera template using bare `{{ }}` for its own variables, so it has to travel
+# untouched. GitHub Actions expressions are `${{ }}` and the renderer leaves
+# those alone by itself, so workflows do not belong here.
+#
+# The dowel copies under `src/components/ui/` are the registry's text, byte for
+# byte, and `tools/check-registry.mjs` holds them to it: nothing in them is
+# lyrn's to substitute.
+verbatim = [
+  "cliff.toml",
+  "public/favicon.svg",
+  "src/components/ui/button.tsx",
+  "src/components/ui/field.tsx",
+  "src/components/ui/input.tsx",
+  "src/components/ui/panel.tsx",
+  "src/components/ui/alert.tsx",
+]
+
+[[hooks]]
+name = "Installing dependencies"
+run = ["pnpm", "install"]
+optional = true
+
+[[hooks]]
+name = "Starting the repository"
+run = ["git", "init", "--initial-branch=main"]
+starts_repository = true
+optional = true
+
+[[hooks]]
+name = "Staging the first commit"
+run = ["git", "add", "."]
+starts_repository = true
+optional = true
+
+# Conventional Commits from the very first entry, so the changelog the
+# repository already carries can be generated from the history.
+[[hooks]]
+name = "Creating the first commit"
+run = ["git", "commit", "-m", "feat: scaffold the project with lyrn"]
+starts_repository = true
+optional = true
+
+[[addons]]
+name = "router"
+summary = "Screens at addresses: react-router, unknown ones sent home"
+files = []
+
+[[addons]]
+name = "tanstack-query"
+summary = "Server state through TanStack Query, on the line's defaults"
+files = ["src/lib/query.ts", "src/lib/query.test.ts"]
+
+[[addons]]
+name = "auth"
+summary = "A cookie session and a sign-in screen until someone signs in"
+files = ["src/lib/api.ts", "src/lib/session.tsx", "src/pages/SignIn.tsx", "src/pages/SignIn.test.tsx", "src/test/session.tsx", "src/components/ui/field.tsx", "src/components/ui/input.tsx", "src/components/ui/panel.tsx", "src/components/ui/alert.tsx"]
+
+[[addons]]
+name = "pwa"
+summary = "Installable and offline: a manifest, its icons, a service worker"
+files = ["public/manifest.webmanifest", "public/sw.js", "public/icon-192.png", "public/icon-512.png", "public/apple-touch-icon.png", "src/pwa.ts", "src/pwa.test.ts"]
