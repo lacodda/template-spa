@@ -6,3 +6,4 @@ earlier one says so; the earlier one is marked superseded rather than deleted.
 | # | Decision | Status |
 | --- | --- | --- |
 | [0001](0001-record-architecture-decisions.md) | Record architecture decisions | Accepted |
+| [0002](0002-dependabot-is-off.md) | Dependabot is off on purpose | Accepted |

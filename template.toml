@@ -1,12 +1,12 @@
-# The spa form of lyrn 2.9.0, written out by `lyrn template export spa`.
+# The spa form of lyrn 2.10.0, written out by `lyrn template export spa`.
 # The project's files are under template/; the variables they may ask for
 # are listed at https://lyrn.lacodda.com/reference/template/.
 form = "spa"
-lyrn = "2.9.0"
+lyrn = "2.10.0"
 
 name = "spa"
 description = "Single-page app: Vite, React, TypeScript, Tailwind, dowel"
-standard = "2026.09"
+standard = "2026.10"
 
 # Files whose own syntax collides with the placeholder braces. `cliff.toml` is
 # a Tera template using bare `{{ }}` for its own variables, so it has to travel
