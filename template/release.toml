@@ -1,0 +1,27 @@
+# How {{ name }} is released, read by furca's release engine: `furca release
+# plan` says what the next release is and what stands in its way, `furca
+# release run` carries it out - bump, changelog, gate, commit, push, green CI,
+# tag, publish - and checks what went out. `lyrn check` reads it too.
+# Reference: https://lacodda.github.io/furca/reference/release/
+
+[project]
+name = "{{ name }}"
+changelog = "CHANGELOG.md"
+manifests = ["package.json"]
+# ADRs record what happened: the versions they name are history.
+as_written = ["docs/adr/"]
+
+[gate]
+# The lint alone: it takes seconds and builds nothing. The rest of the gate is
+# CI, which the run waits for before the tag.
+commands = [
+    "pnpm exec eslint .",
+]
+
+[ci]
+provider = "github"
+workflow = "ci.yml"
+
+# The app goes out to its stand: turnout deploys it from here and checks the
+# stand's health. Which stand is turnout's own configuration, not this file's.
+[post.deploy]
