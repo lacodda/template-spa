@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 22
       - name: Install lyrn
-        run: npm install --global lyrn@2.20.0
+        run: npm install --global lyrn@2.21.0
       - name: Check the template
         run: lyrn template check .
 
@@ -42,7 +42,7 @@ jobs:
         with:
           node-version: 22
       - name: Install lyrn
-        run: npm install --global lyrn@2.20.0
+        run: npm install --global lyrn@2.21.0
       - name: Generate a project
         shell: bash
         run: |
